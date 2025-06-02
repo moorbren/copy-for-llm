@@ -1,0 +1,81 @@
+{
+  "name": "copy-file-contents-for-llm",
+  "displayName": "Copy File Contents For LLM",
+  "description": "Dead simple extension to copy selected files in the explorer to your clipboard. Includes filename and relative path.",
+  "publisher": "Brendan Moore",
+  "icon": "demo-assets/CopyForLLMLogo.png",
+  "version": "1.0.0",                     
+  "repository": "https://github.com/moorbren/copy-for-llm",
+  "engines": {
+    "vscode": "^1.84.0"
+  },
+  "categories": ["Other"],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "publish": "vsce publish"
+  },
+  "activationEvents": [
+    "onCommand:copy-for-llm.copySelectedFiles",
+    "onCommand:copy-for-llm.toggleRelativePath"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "copy-for-llm.copySelectedFiles",
+        "title": "Copy For LLM: Selected Explorer Files"
+      },
+      {
+        "command": "copy-for-llm.toggleRelativePath",
+        "title": "Copy For LLM: Toggle Relative Path / Filename"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "copy-for-llm.copySelectedFiles",
+          "group": "navigation@5"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Copy File Contents For LLM",
+      "properties": {
+        "copyForLlm.summaryMode": {
+          "type": "string",
+          "enum": ["auto", "always", "off"],
+          "default": "auto",
+          "description": "Controls whether a summary header (file list + approx. token counts) is added to the clipboard.\n• auto  – include only when total tokens exceed copyForLlm.summaryThresholdTokens\n• always – always include\n• off   – never include"
+        },
+        "copyForLlm.summaryThresholdTokens": {
+          "type": "number",
+          "default": 50000,
+          "minimum": 1000,
+          "description": "Token-count threshold that triggers the summary header when summaryMode is set to 'auto'."
+        }
+      }
+    }
+  },
+  "dependencies": {
+    "tiktoken": "^1.0.21"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.3",
+    "@types/node": "18.x",
+    "@types/vscode": "^1.84.0",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "@vscode/test-electron": "^2.3.6",
+    "eslint": "^8.52.0",
+    "glob": "^10.3.10",
+    "mocha": "^10.2.0",
+    "typescript": "^5.2.2",
+    "vsce": "^2.15.0"
+  }
+}
